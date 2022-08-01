@@ -24,7 +24,7 @@ WIDTH = 16
 PLAYER_POS = 3
 
 MAX_SPEED = 1
-FRICTION_CONST = 0.5 # TODO: adjust
+FRICTION_CONST = 0.8 # TODO: adjust
 EVTS_MULTIPLIER = 1   #       these
 
 PLAYER_CHAR = '🚃'
@@ -41,6 +41,7 @@ total_km = 0.0
 
 debug_text = None
 
+c = 0
 
 def render():
     os.system("clear")
@@ -48,12 +49,17 @@ def render():
     # print(f"Velocity: {velocity:<5.2f} ", end="")
     print(f"Total km: {total_km:.2f} ", end="")
 
+    global c
     # Compose world
     world = [x for x in foreground]
     # for i in range(0, WIDTH):
     #     if background[i] is not None: world[i] = background[i]
     world[PLAYER_POS] = PLAYER_CHAR
-    if velocity > 50: world[PLAYER_POS-1] = FIRE_CHAR
+    if velocity > 0.9:
+        world[PLAYER_POS-1] = FIRE_CHAR
+        if c % 2 == 0:
+            world[PLAYER_POS-2] = FIRE_CHAR
+        c += 1
 
 
     # Print world
@@ -75,6 +81,7 @@ def run():
     global velocity, foregroud, background, total_km
 
     ax = 0.0
+    counter = 0.0
 
     events = XEvents()
     events.start()
@@ -102,15 +109,16 @@ def run():
 
         # Add number of events to velocity. If no events, reduce velocity.
         if n_evts > 0:
-            ax += 0.01
+            ax += 0.02
         elif velocity > 0.02:  # ugly hack. figure out why velocity goes below 0 sometimes
-            ax -= 0.01
+            ax -= 0.005
         elif velocity <= 0:
             ax = 0
             velocity = 0
 
-        debug(f"velocity: {velocity}, ax: {ax}")
-        velocity += ax
+        # debug(f"velocity: {velocity}, ax: {ax}")
+        # velocity += ax
+        velocity += ax - velocity * FRICTION_CONST
 
         # Limit speed
         velocity = min(velocity, MAX_SPEED)
@@ -120,20 +128,24 @@ def run():
         if (velocity == 0): continue
         
 
+        # Add to counter
+        counter += velocity
+
         # Update world
-        # for i in range(0, velocity):
-        if (velocity >= 1):
+        # for i in range(0, velocity):  # If moving 2 tiles over 1 frame
+        if (counter >= 0):
             foreground.pop(0)
             if (random.randint(0, 5) ==  1):
                 foreground.append(CACTUS_CHAR)
             else:
                 foreground.append(RAIL_CHAR)
 
+            counter -= 1
             total_km += 0.01 # TODO: adjust
 
 
         # Render
-        # debug(f"vel: {velocity:.4f}, ax: {ax}")
+        debug(f"vel: {velocity:.4f}, ax: {ax}")
         # TODO: put in update if-check?
         render()
 

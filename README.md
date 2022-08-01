@@ -1,8 +1,7 @@
 # railway-statusbar
 Statusbar application which moves a train according to you typing speed.
 
-Still in testing!
-
+![Illustration of the application in a statusbar](images/status.png)
 
 ## Requirements
 Requires Python and python-xlib.
@@ -15,7 +14,9 @@ Add as a polybar module:
 ```
 [module/railway]
 type = custom/script
-exec = railway.py
+exec = "/usr/bin/python3 -u ~/path/to/railway.py"
+tail = true
+interval = 1
 ```
 
 ### i3bar

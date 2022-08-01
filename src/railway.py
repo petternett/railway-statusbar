@@ -9,16 +9,11 @@ import math
 from datetime import datetime, timedelta
 from xlib import XEvents
 
-# TODO (now): Bind movement to velocity
-
-# TODO (later): try system.stdout.write() instead of print for status bar?
+# TODO: try system.stdout.write() instead of print for status bar?
 
 
-# DELAY = time within which before no. keystrokes resets
-# DELAY = 0.1
 FPS = 30
 DELAY = 1.0 / FPS
-MS_PER_UPDATE = DELAY
 
 WIDTH = 16
 PLAYER_POS = 3
@@ -57,7 +52,7 @@ def render():
     world[PLAYER_POS] = PLAYER_CHAR
     if velocity > 0.9:
         world[PLAYER_POS-1] = FIRE_CHAR
-        if c % 2 == 0:
+        if c % 3 == 0 or c % 2 == 0:
             world[PLAYER_POS-2] = FIRE_CHAR
         c += 1
 
@@ -110,7 +105,7 @@ def run():
         # Add number of events to velocity. If no events, reduce velocity.
         if n_evts > 0:
             ax += 0.02
-        elif velocity > 0.02:  # ugly hack. figure out why velocity goes below 0 sometimes
+        elif velocity > 0:  # figure out why velocity goes below 0 sometimes
             ax -= 0.005
         elif velocity <= 0:
             ax = 0
@@ -145,7 +140,7 @@ def run():
 
 
         # Render
-        debug(f"vel: {velocity:.4f}, ax: {ax}")
+        # debug(f"vel: {velocity:.4f}, ax: {ax}")
         # TODO: put in update if-check?
         render()
 

@@ -9,8 +9,6 @@ import math
 from datetime import datetime, timedelta
 from xlib import XEvents
 
-# TODO: try system.stdout.write() instead of print for status bar?
-
 
 FPS = 30
 DELAY = 1.0 / FPS

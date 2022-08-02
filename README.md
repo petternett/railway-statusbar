@@ -1,7 +1,7 @@
 # railway-statusbar
 Statusbar application which moves a train according to your typing speed.
 
-![Illustration of the application in a statusbar](images/status.png)
+![Illustration of the application in a statusbar](status.png)
 
 ## Requirements
 Requires Python and python-xlib.

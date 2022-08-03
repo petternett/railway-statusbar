@@ -3,6 +3,8 @@ Statusbar application which moves a train according to your typing speed.
 
 ![Illustration of the application in a statusbar](images/status.png)
 
+![Animated illustration of the application](images/animated.gif) 
+
 ## Requirements
 Requires Python and python-xlib.
 

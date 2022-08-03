@@ -9,7 +9,6 @@ import math
 from datetime import datetime, timedelta
 from xlib import XEvents
 
-
 FPS = 30
 DELAY = 1.0 / FPS
 
@@ -30,11 +29,12 @@ background = [None] * WIDTH
 
 velocity = 0.0
 total_km = 0.0
+c = 0
 
 debug_text = None
 
+# TODO: persistent km counter, store in XDG_DATA_HOME (python-xdg)
 
-c = 0
 
 def render():
 

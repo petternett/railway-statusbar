@@ -12,6 +12,9 @@ Requires Python and python-xlib.
 
 ## Installation
 
+1. Clone repo
+2. Add railway.py script as a statusbar module:
+
 ### Polybar
 Add as a polybar module:
 ```

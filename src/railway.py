@@ -17,8 +17,7 @@ WIDTH = 16
 PLAYER_POS = 3
 
 MAX_SPEED = 1
-FRICTION_CONST = 0.8 # TODO: adjust
-EVTS_MULTIPLIER = 1   #       these
+FRICTION_CONST = 0.8
 
 PLAYER_CHAR = '🚃'
 RAIL_CHAR = '..'
@@ -39,7 +38,7 @@ c = 0
 def render():
     os.system("clear")
 
-    # print(f"Velocity: {velocity:<5.2f} ", end="")
+    # Print km counter
     print(f"Total km: {total_km:.2f} ", end="")
 
     global c
@@ -95,7 +94,7 @@ def run():
 
         # Process input. Get number of events in cur tick:
         if (evt := events.next_event()):
-            n_evts += 1 # * EVTS_MULTIPLIER
+            n_evts += 1
         elif n_evts > 0:
             n_evts -= 1
 
@@ -110,7 +109,6 @@ def run():
             velocity = 0
 
         # debug(f"velocity: {velocity}, ax: {ax}")
-        # velocity += ax
         velocity += ax - velocity * FRICTION_CONST
 
         # Limit speed
@@ -126,7 +124,7 @@ def run():
 
         # Update world
         # for i in range(0, velocity):  # If moving 2 tiles over 1 frame
-        if (counter >= 0):
+        if (counter >= 1):
             foreground.pop(0)
             if (random.randint(0, 5) ==  1):
                 foreground.append(CACTUS_CHAR)

@@ -33,10 +33,10 @@ total_km = 0.0
 
 debug_text = None
 
+
 c = 0
 
 def render():
-    os.system("clear")
 
     # Print km counter
     print(f"Total km: {total_km:.2f} ", end="")

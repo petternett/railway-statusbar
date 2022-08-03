@@ -24,5 +24,4 @@ tbd
 
 
 ## Known issues
-- Sometimes displays the message "Environment variable TERM not set"
 - Might not keep still if your emoji scaling is off. This can be fixed in Polybar by scaling your emoji font, i.e. `font-1 = JoyPixels:scale=8`.

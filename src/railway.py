@@ -33,6 +33,7 @@ c = 0
 
 debug_text = None
 
+# TODO: stop using so much cpu when idle
 # TODO: persistent km counter, store in XDG_DATA_HOME (python-xdg)
 
 
@@ -88,7 +89,6 @@ def run():
     # - Render
     # - Sleep
     while True:
-        cur_time = time.time()
 
         n_evts = 0
 
@@ -116,8 +116,12 @@ def run():
 
         # If stopped
         # if velocity < 0: velocity = 0
-        if (velocity == 0): continue
+        if (velocity == 0):
+            # continue
+            events.new_press.wait()
+            events.new_press.clear()
         
+        cur_time = time.time()
 
         # Add to counter
         counter += velocity

@@ -21,6 +21,7 @@ events.
 """
 
 __author__ = 'Scott Kirkwood (scott+keymon@forusers.com)'
+# Modified by Petter J. Barhaugen (petter@petternett.no)
 
 from Xlib import display
 from Xlib import X
@@ -61,6 +62,7 @@ class XEvents(threading.Thread):
     self.local_display = display.Display()
     self.ctx = None
     self.events = []  # each of type XEvent
+    self.new_press = threading.Event()
 
   def run(self):
     """Standard run method for threading."""
@@ -134,3 +136,4 @@ class XEvents(threading.Thread):
       value: 1=down, 0=up
     """
     self.events.append(XEvent('EV_KEY', event.detail - 8))
+    self.new_press.set()

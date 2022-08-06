@@ -1,5 +1,6 @@
 # railway-statusbar
 Statusbar application which moves a train according to your typing speed.
+Probably only supports X, and not Wayland.
 
 ![Illustration of the application in a statusbar](images/status.png)
 
@@ -35,3 +36,4 @@ tbd
 
 ## Planned features
 - Parallax effect
+- Wayland support

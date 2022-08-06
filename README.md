@@ -37,3 +37,4 @@ tbd
 ## Planned features
 - Parallax effect
 - Wayland support
+- Persistent storage of total km-counter

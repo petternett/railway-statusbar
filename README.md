@@ -1,6 +1,6 @@
 # railway-statusbar
 Statusbar application which moves a train according to your typing speed.
-Probably only supports X, and not Wayland.
+Works with X, probably also works on Wayland (needs testing).
 
 ![Illustration of the application in a statusbar](images/status.png)
 
@@ -8,7 +8,7 @@ Animated example:
 ![Animated illustration of the application](images/animated.gif) 
 
 ## Requirements
-Requires Python and python-xlib.
+Requires Python and [pynput](https://pypi.org/project/pynput/).
 
 
 ## Installation
@@ -36,5 +36,4 @@ tbd
 
 ## Planned features
 - Parallax effect
-- Wayland support
 - Persistent storage of total km-counter

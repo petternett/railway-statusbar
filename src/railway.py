@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 __author__ = "Petter J. Barhaugen (petter@petternett.no)"
 
@@ -7,7 +8,8 @@ import time
 import random
 import math
 from datetime import datetime, timedelta
-from xlib import XEvents
+from pynput import keyboard
+import threading
 
 FPS = 30
 DELAY = 1.0 / FPS
@@ -30,6 +32,9 @@ background = [None] * WIDTH
 velocity = 0.0
 total_km = 0.0
 c = 0
+
+new_press = None
+pressed = False
 
 debug_text = None
 
@@ -69,15 +74,21 @@ def debug(text):
     global debug_text
     debug_text = text
 
+def on_release(key):
+    global new_press, pressed
+    new_press.set()
+    pressed = True
 
 def run():
-    global velocity, foregroud, background, total_km
+    global velocity, foregroud, background, total_km, new_press, pressed
 
     ax = 0.0
     counter = 0.0
 
-    events = XEvents()
-    events.start()
+    new_press = threading.Event()
+    listener = keyboard.Listener(on_release=on_release)
+    listener.start()
+
 
     # Initial render
     render()
@@ -90,11 +101,13 @@ def run():
     # - Sleep
     while True:
 
+        # In case I ever need to implement for >1 event per tick
         n_evts = 0
 
-        # Process input. Get number of events in cur tick:
-        if (evt := events.next_event()):
+        # Process input. If key event happens in tick:
+        if (pressed):
             n_evts += 1
+            pressed = False
         elif n_evts > 0:
             n_evts -= 1
 
@@ -102,7 +115,7 @@ def run():
         # Add number of events to velocity. If no events, reduce velocity.
         if n_evts > 0:
             ax += 0.02
-        elif velocity > 0:  # figure out why velocity goes below 0 sometimes
+        elif velocity > 0:
             ax -= 0.005
         elif velocity <= 0:
             ax = 0
@@ -115,11 +128,9 @@ def run():
         velocity = min(velocity, MAX_SPEED)
 
         # If stopped
-        # if velocity < 0: velocity = 0
         if (velocity == 0):
-            # continue
-            events.new_press.wait()
-            events.new_press.clear()
+            new_press.wait()
+            new_press.clear()
         
         cur_time = time.time()
 

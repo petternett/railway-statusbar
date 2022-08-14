@@ -10,7 +10,7 @@ import math
 from datetime import datetime, timedelta
 from pynput import keyboard
 import threading
-import emoji  # TODO implement
+from emoji import emojize
 
 FPS = 30
 DELAY = 1.0 / FPS
@@ -21,11 +21,11 @@ PLAYER_POS = 3
 MAX_SPEED = 1
 FRICTION_CONST = 0.8
 
-PLAYER_CHAR = '🚃'
 RAIL_CHAR = '..'
-FIRE_CHAR = '🔥'
-CACTUS_CHAR = '🌵'
-MTN_CHAR = '🏔️'
+PLAYER_CHAR = emojize(":railway_car:")
+FIRE_CHAR = emojize(":fire:")
+CACTUS_CHAR = emojize(":cactus:")
+MTN_CHAR = emojize(":snow-capped_mountain:")
 
 world = [None] * WIDTH
 foreground = [None] * WIDTH
@@ -39,8 +39,8 @@ c = 0
 no_mnts = 0
 MAX_NO_MNTS = 3
 
-new_press = None
-pressed = False
+new_press_event = None
+key_pressed = False
 
 debug_text = None
 
@@ -90,18 +90,18 @@ def debug(text):
     debug_text = text
 
 def on_release(key):
-    global new_press, pressed
-    new_press.set()
-    pressed = True
+    global new_press_event, key_pressed
+    new_press_event.set()
+    key_pressed = True
 
 def run():
-    global velocity, foregroud, background, no_mnts, total_km, new_press, pressed
+    global velocity, foregroud, background, no_mnts, total_km, new_press_event, key_pressed
 
     ax = 0.0
     counter = 0.0
     para = 0
 
-    new_press = threading.Event()
+    new_press_event = threading.Event()
     listener = keyboard.Listener(on_release=on_release)
     listener.start()
 
@@ -110,7 +110,7 @@ def run():
     render()
 
 
-    # Actual game loop:
+    # Actual "game" loop:
     # - Process input
     # - Update physics, world
     # - Render
@@ -121,9 +121,9 @@ def run():
         n_evts = 0
 
         # Process input. If key event happens in tick:
-        if (pressed):
+        if (key_pressed):
             n_evts += 1
-            pressed = False
+            key_pressed = False
         elif n_evts > 0:
             n_evts -= 1
 
@@ -145,8 +145,8 @@ def run():
 
         # If stopped
         if (velocity == 0):
-            new_press.wait()
-            new_press.clear()
+            new_press_event.wait()
+            new_press_event.clear()
         
         cur_time = time.time()
 

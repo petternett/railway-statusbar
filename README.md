@@ -23,7 +23,6 @@ Add as a polybar module:
 type = custom/script
 exec = "/usr/bin/python3 -u ~/path/to/railway.py"
 tail = true
-interval = 10
 ```
 
 ### i3bar

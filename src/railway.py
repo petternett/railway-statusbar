@@ -12,14 +12,16 @@ from pynput import keyboard
 import threading
 from emoji import emojize
 
-FPS = 30
-DELAY = 1.0 / FPS
 
 WIDTH = 16
 PLAYER_POS = 3
 
+FPS = 30
+DELAY = 1.0 / FPS
 MAX_SPEED = 1
 FRICTION_CONST = 0.8
+velocity = 0.0
+total_km = 0.0
 
 RAIL_CHAR = '..'
 PLAYER_CHAR = emojize(":railway_car:")
@@ -33,9 +35,7 @@ background = [None] * WIDTH
 PARA_CONST = 9
 MAX_PARA_ELEMENTS = 2
 
-velocity = 0.0
-total_km = 0.0
-c = 0
+fire_disp = 0
 no_mnts = 0
 MAX_NO_MNTS = 3
 
@@ -44,35 +44,28 @@ key_pressed = False
 
 debug_text = None
 
-# TODO: persistent km counter in XDG_DATA_HOME (python-xdg)
-
 
 def render():
 
     # Print km counter
     print(f"Total km: {total_km:.2f} ", end="")
 
-    global c
+    global fire_disp
     # Compose world
-    # TODO: clean up
     world = [x for x in background]
+
     for i in range(0, WIDTH):
         if foreground[i] is not None:
             world[i] = foreground[i]
         elif world[i] == None:
             world[i] = RAIL_CHAR
 
-    # world = [x for x in foreground]
-    
-
-    # for i in range(0, WIDTH):
-    #     if background[i] is not None: world[i] = background[i]
     world[PLAYER_POS] = PLAYER_CHAR
     if velocity > 0.9:
         world[PLAYER_POS-1] = FIRE_CHAR
-        if c % 3 == 0 or c % 2 == 0:
+        if fire_disp % 3 == 0 or fire_disp % 2 == 0:
             world[PLAYER_POS-2] = FIRE_CHAR
-        c += 1
+        fire_disp += 1
 
 
     # Print world

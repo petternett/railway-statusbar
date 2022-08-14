@@ -10,6 +10,7 @@ import math
 from datetime import datetime, timedelta
 from pynput import keyboard
 import threading
+import emoji  # TODO implement
 
 FPS = 30
 DELAY = 1.0 / FPS
@@ -24,22 +25,26 @@ PLAYER_CHAR = '🚃'
 RAIL_CHAR = '..'
 FIRE_CHAR = '🔥'
 CACTUS_CHAR = '🌵'
+MTN_CHAR = '🏔️'
 
-world = [RAIL_CHAR] * WIDTH
-foreground = [RAIL_CHAR] * WIDTH
+world = [None] * WIDTH
+foreground = [None] * WIDTH
 background = [None] * WIDTH
+PARA_CONST = 9
+MAX_PARA_ELEMENTS = 2
 
 velocity = 0.0
 total_km = 0.0
 c = 0
+no_mnts = 0
+MAX_NO_MNTS = 3
 
 new_press = None
 pressed = False
 
 debug_text = None
 
-# TODO: stop using so much cpu when idle
-# TODO: persistent km counter, store in XDG_DATA_HOME (python-xdg)
+# TODO: persistent km counter in XDG_DATA_HOME (python-xdg)
 
 
 def render():
@@ -49,7 +54,17 @@ def render():
 
     global c
     # Compose world
-    world = [x for x in foreground]
+    # TODO: clean up
+    world = [x for x in background]
+    for i in range(0, WIDTH):
+        if foreground[i] is not None:
+            world[i] = foreground[i]
+        elif world[i] == None:
+            world[i] = RAIL_CHAR
+
+    # world = [x for x in foreground]
+    
+
     # for i in range(0, WIDTH):
     #     if background[i] is not None: world[i] = background[i]
     world[PLAYER_POS] = PLAYER_CHAR
@@ -80,10 +95,11 @@ def on_release(key):
     pressed = True
 
 def run():
-    global velocity, foregroud, background, total_km, new_press, pressed
+    global velocity, foregroud, background, no_mnts, total_km, new_press, pressed
 
     ax = 0.0
     counter = 0.0
+    para = 0
 
     new_press = threading.Event()
     listener = keyboard.Listener(on_release=on_release)
@@ -144,15 +160,27 @@ def run():
             if (random.randint(0, 5) ==  1):
                 foreground.append(CACTUS_CHAR)
             else:
-                foreground.append(RAIL_CHAR)
+                foreground.append(None)
+
+            if para == 0:
+                if background[0] == MTN_CHAR: no_mnts -= 1
+
+                background.pop(0)
+                if (random.randint(0, 2) == 1 and no_mnts < MAX_NO_MNTS):
+                    background.append(MTN_CHAR)
+                    no_mnts += 1
+                else:
+                    background.append(None)
+
+            # para = (para + 1) % PARA_CONST
+            para += 1
+            para %= PARA_CONST
 
             counter -= 1
             total_km += 0.01 # TODO: adjust
 
 
-        # Render
         # debug(f"vel: {velocity:.4f}, ax: {ax}")
-        # TODO: put in update if-check?
         render()
 
 
@@ -160,12 +188,6 @@ def run():
         time.sleep(cur_time + DELAY - time.time())
 
 
-        # Background (parallax)
-        # background.pop(0)
-        # if (random.randint(0, 20) == 1):
-        #     background.append("🏔️")
-        # else:
-        #     background.append(None)
                    
 
 

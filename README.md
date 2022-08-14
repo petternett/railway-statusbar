@@ -8,7 +8,7 @@ Animated example:
 ![Animated illustration of the application](images/animated.gif) 
 
 ## Requirements
-Requires Python and [pynput](https://pypi.org/project/pynput/).
+Requires Python, [pynput](https://pypi.org/project/pynput/) and [emoji](https://pypi.org/project/emoji/).
 
 
 ## Installation
@@ -35,5 +35,5 @@ tbd
 
 
 ## Planned features
-- Parallax effect
 - Persistent storage of total km-counter
+- Optional WPM counter

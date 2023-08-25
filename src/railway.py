@@ -4,6 +4,7 @@
 __author__ = "Petter J. Barhaugen (petter@petternett.no)"
 
 import os
+import sys
 import time
 import random
 import math
@@ -11,6 +12,17 @@ from datetime import datetime, timedelta
 from pynput import keyboard
 import threading
 from emoji import emojize
+
+n = len(sys.argv)
+UNITS = "km"
+for i in range(1, n):
+    if sys.argv[i] == "-u" or sys.argv[i] == "--units":
+        import reverse_geocoder as rg
+        import geocoder
+        g = geocoder.ip('me')
+        country = rg.search(g.latlng)[0]['cc']
+        if country in ["US", "LR", "MM"]: # Liberia, Myanmar, USA (imperial system countries")
+            UNITS = "mi"
 
 
 WIDTH = 16
@@ -21,7 +33,16 @@ DELAY = 1.0 / FPS
 MAX_SPEED = 1
 FRICTION_CONST = 0.8
 velocity = 0.0
-total_km = 0.0
+CACHE_DIR = os.path.join(os.path.expanduser("~"), ".cache/railway_status")
+if not os.path.exists(CACHE_DIR):
+    os.makedirs(CACHE_DIR)
+CACHE_FILE = os.path.join(CACHE_DIR, "KM.txt")
+with open(CACHE_FILE, 'r') as CACHE_OPP:
+    file_content = CACHE_OPP.read()
+    if file_content != "":
+        TOTAL_KM = float(file_content)
+    else:
+        TOTAL_KM = 0.0
 
 RAIL_CHAR = '..'
 PLAYER_CHAR = emojize(":railway_car:")
@@ -48,7 +69,7 @@ debug_text = None
 def render():
 
     # Print km counter
-    print(f"Total km: {total_km:.2f} ", end="")
+    print(f"Total km: {TOTAL_KM:.2f} ", end="")
 
     global fire_disp
     # Compose world
@@ -88,7 +109,7 @@ def on_release(key):
     key_pressed = True
 
 def run():
-    global velocity, foregroud, background, no_mnts, total_km, new_press_event, key_pressed
+    global velocity, foregroud, background, no_mnts, TOTAL_KM, new_press_event, key_pressed
 
     ax = 0.0
     counter = 0.0
@@ -140,7 +161,7 @@ def run():
         if (velocity == 0):
             new_press_event.wait()
             new_press_event.clear()
-        
+
         cur_time = time.time()
 
         # Add to counter
@@ -170,7 +191,10 @@ def run():
             para %= PARA_CONST
 
             counter -= 1
-            total_km += 0.01 # TODO: adjust
+            cache = open(CACHE_FILE, 'w+')
+            TOTAL_KM += 0.01 # TODO: adjust
+            cache.write(str(TOTAL_KM)[:5])
+            cache.close()
 
 
         # debug(f"vel: {velocity:.4f}, ax: {ax}")
@@ -181,7 +205,7 @@ def run():
         time.sleep(cur_time + DELAY - time.time())
 
 
-                   
+
 
 
 if __name__ == "__main__":

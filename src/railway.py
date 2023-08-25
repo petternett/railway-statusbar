@@ -40,9 +40,9 @@ CACHE_FILE = os.path.join(CACHE_DIR, "KM.txt")
 with open(CACHE_FILE, 'r') as CACHE_OPP:
     file_content = CACHE_OPP.read()
     if file_content != "":
-        TOTAL_KM = float(file_content)
+        TOTAL_DISTANCE = float(file_content)
     else:
-        TOTAL_KM = 0.0
+        TOTAL_DISTANCE = 0.0
 
 RAIL_CHAR = '..'
 PLAYER_CHAR = emojize(":railway_car:")
@@ -69,7 +69,7 @@ debug_text = None
 def render():
 
     # Print km counter
-    print(f"Total km: {TOTAL_KM:.2f} ", end="")
+    print(f"Total {UNITS}: {TOTAL_DISTANCE:.2f} ", end="")
 
     global fire_disp
     # Compose world
@@ -109,7 +109,7 @@ def on_release(key):
     key_pressed = True
 
 def run():
-    global velocity, foregroud, background, no_mnts, TOTAL_KM, new_press_event, key_pressed
+    global velocity, foregroud, background, no_mnts, TOTAL_DISTANCE, new_press_event, key_pressed
 
     ax = 0.0
     counter = 0.0
@@ -192,8 +192,8 @@ def run():
 
             counter -= 1
             cache = open(CACHE_FILE, 'w+')
-            TOTAL_KM += 0.01 # TODO: adjust
-            cache.write(str(TOTAL_KM)[:5])
+            TOTAL_DISTANCE += 0.01 # TODO: adjust
+            cache.write(str(TOTAL_DISTANCE)[:5])
             cache.close()
 
 

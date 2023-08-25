@@ -191,6 +191,7 @@ def run():
             para %= PARA_CONST
 
             counter -= 1
+            TOTAL_DISTANCE += 0.01 # TODO: adjust
             cache = open(CACHE_FILE, 'w+')
             TOTAL_DISTANCE += 0.01 # TODO: adjust
             cache.write(str(TOTAL_DISTANCE)[:5])

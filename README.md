@@ -1,5 +1,5 @@
 # railway-statusbar
-Statusbar application which moves a train according to your typing speed.
+Statusbar application for Polybar which moves a train according to your typing speed.
 Works with X, probably also works on Wayland (needs testing).
 
 ![Illustration of the application in a statusbar](images/status.png)

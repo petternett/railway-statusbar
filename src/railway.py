@@ -125,7 +125,7 @@ def run():
         if n_evts > 0:
             ax += 0.02
         elif velocity > 0:
-            ax -= 0.005
+            ax -= 0.005  # TODO: replace with Cubic ease in/out
         elif velocity <= 0:
             ax = 0
             velocity = 0
@@ -147,7 +147,7 @@ def run():
         counter += velocity
 
         # Update world
-        # for i in range(0, velocity):  # If moving 2 tiles over 1 frame
+        # for i in range(0, velocity):  # TODO: If moving 2 tiles over 1 frame
         if (counter >= 1):
             foreground.pop(0)
             if (random.randint(0, 5) ==  1):
